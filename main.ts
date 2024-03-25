@@ -34,17 +34,41 @@ function HUD2 () {
     NeedRest.setFlag(SpriteFlag.RelativeToCamera, true)
     NeedRest.setPosition(30, 102)
     Stamina = statusbars.create(50, 6, StatusBarKind.Energy)
-    Stamina.setBarBorder(1, 15)
     Stamina.max = 100
+    Stamina.setBarBorder(1, 15)
     Stamina.value = 100
     Stamina.setPosition(30, 110)
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`tile21`, function (sprite, location) {
+    tiles.setTileAt(tiles.getTileLocation(54, 26), assets.tile`myTile`)
+    tiles.setTileAt(tiles.getTileLocation(54, 27), assets.tile`myTile`)
+})
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     CurrentItem = Inv.get_items()[Inv.get_number(ToolbarNumberAttribute.SelectedIndex)]
     if (CurrentItem == Item_List_Inv[1]) {
         Inv.get_items().removeAt(Inv.get_number(ToolbarNumberAttribute.SelectedIndex))
-        Stamina.max = 200
         Stamina.value = 200
+        Inv.update()
+    } else if (CurrentItem == Item_List_Inv[0]) {
+        Inv.get_items().removeAt(Inv.get_number(ToolbarNumberAttribute.SelectedIndex))
+        projectile = sprites.createProjectileFromSprite(img`
+            . . . . . . . . . . . . . . . . 
+            . f f f f f f f f f . . . . . . 
+            . f 8 . 8 . 8 . 8 f . . . . . . 
+            . f . 8 . 8 . 8 . f . . . . . . 
+            . f 8 . 8 . 8 . 8 f f f f f f f 
+            . f f 8 . 8 . 8 . 8 . 8 . 8 . f 
+            . . f . 8 . 8 . 8 . 8 . 8 . 8 f 
+            . . f 8 . 8 . 8 . 8 . 8 . 8 f f 
+            . f f . 8 . 8 . 8 . 8 . 8 . f . 
+            f f . 8 . 8 . 8 . 8 . 8 f f . . 
+            f . 8 . 8 . 8 . 8 . 8 . f . . . 
+            f 8 . 8 . 8 f f . 8 . 8 f f . . 
+            f . 8 . 8 f f f f . 8 . 8 f f . 
+            f 8 . 8 f f . . f f . 8 . f f . 
+            f f f f f . . . . f f f f f . . 
+            . . . . . . . . . . . . . . . . 
+            `, Render.getRenderSpriteInstance(), Render.getAttribute(Render.attribute.dirX) * 44, Render.getAttribute(Render.attribute.dirY) * 44)
         Inv.update()
     }
 })
@@ -88,14 +112,6 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.BlueDoor, function (sprite, othe
             `)
     })
 })
-scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile13`, function (sprite, location) {
-    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
-    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
-})
-scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, location) {
-    tiles.setTileAt(tiles.getTileLocation(54, 26), assets.tile`myTile`)
-    tiles.setTileAt(tiles.getTileLocation(54, 27), assets.tile`myTile`)
-})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.YellowDoor, function (sprite, otherSprite) {
     otherSprite.setImage(img`
         . . . . . . . . . . . . . . . . 
@@ -136,13 +152,52 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.YellowDoor, function (sprite, ot
             `)
     })
 })
-scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile3`, function (sprite, location) {
+scene.onOverlapTile(SpriteKind.Player, assets.tile`tile18`, function (sprite, location) {
     tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
     tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
 })
 function ItemSpawn () {
-    for (let value of tiles.getTilesByType(assets.tile`myTile14`)) {
-        tiles.placeOnTile(Item_List[1], value)
+    for (let value of tiles.getTilesByType(assets.tile`myTile`)) {
+        BSoda = sprites.create(img`
+            . . . . . f f f f f f . . . . . 
+            . . . . f b b b b b b f . . . . 
+            . . . . f f f f f f f f . . . . 
+            . . . . f 8 8 8 8 8 8 f . . . . 
+            . . . . f 8 8 8 8 8 8 f . . . . 
+            . . . . f 8 8 8 8 8 8 f . . . . 
+            . . . . f 8 8 8 8 8 8 f . . . . 
+            . . . . f 8 f f f 8 8 f . . . . 
+            . . . . f 8 f 8 8 f 8 f . . . . 
+            . . . . f 8 f f f 8 8 f . . . . 
+            . . . . f 8 f 8 8 f 8 f . . . . 
+            . . . . f 8 f f f 8 8 f . . . . 
+            . . . . f 8 8 8 8 8 8 f . . . . 
+            . . . . f 8 8 8 8 8 8 f . . . . 
+            . . . . f 8 8 8 8 8 8 f . . . . 
+            . . . . . f f f f f f . . . . . 
+            `, SpriteKind.BSoda)
+        tiles.placeOnTile(BSoda, value)
+    }
+    for (let value of tiles.getTilesByType(assets.tile`tile14`)) {
+        Zesty_Bar = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . f f . . . 
+            . . . . . . . . . f f e f f . . 
+            . . . . . . . . f f e f e f f . 
+            . . . . . . . f f e f e f e e f 
+            . . . . f f f e e f e f e f f . 
+            . . . f c f f f f e f e f . . . 
+            . . . . f c c c f f e f . . . . 
+            . . . f c c c c f f f . . . . . 
+            . f f c c c c c c f . . . . . . 
+            f c c c c c c f f c f . . . . . 
+            . f c c c c f . f f f . . . . . 
+            . . f c f f . . . . . . . . . . 
+            . . . f . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `, SpriteKind.ZestyBar)
+        tiles.placeOnTile(Zesty_Bar, value)
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.ZestyBar, function (sprite, otherSprite) {
@@ -154,140 +209,33 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Exits, function (sprite, otherSp
     sprites.destroy(otherSprite)
     Exits += 1
 })
-scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, location) {
-    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
-    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
-})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.BSoda, function (sprite, otherSprite) {
     sprites.destroy(otherSprite)
     Inv.get_items().push(Item_List_Inv[0])
     Inv.update()
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`tile15`, function (sprite, location) {
+    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
+    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
 })
 function Player_Creator () {
     Student = Render.getRenderSpriteInstance()
     Render.setAttribute(Render.attribute.wallZScale, 1.3)
     Render.setSpriteAttribute(Student, RCSpriteAttribute.ZOffset, 3)
     Render.moveWithController(2, 3, 0)
-    Item_List = [
-    sprites.create(img`
-        . . . . . f f f f f f . . . . . 
-        . . . . f b b b b b b f . . . . 
-        . . . . f f f f f f f f . . . . 
-        . . . . f 8 8 8 8 8 8 f . . . . 
-        . . . . f 8 8 8 8 8 8 f . . . . 
-        . . . . f 8 8 8 8 8 8 f . . . . 
-        . . . . f 8 8 8 8 8 8 f . . . . 
-        . . . . f 8 f f f 8 8 f . . . . 
-        . . . . f 8 f 8 8 f 8 f . . . . 
-        . . . . f 8 f f f 8 8 f . . . . 
-        . . . . f 8 f 8 8 f 8 f . . . . 
-        . . . . f 8 f f f 8 8 f . . . . 
-        . . . . f 8 8 8 8 8 8 f . . . . 
-        . . . . f 8 8 8 8 8 8 f . . . . 
-        . . . . f 8 8 8 8 8 8 f . . . . 
-        . . . . . f f f f f f . . . . . 
-        `, SpriteKind.BSoda),
-    sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . f f . . . 
-        . . . . . . . . . f f e f f . . 
-        . . . . . . . . f f e f e f f . 
-        . . . . . . . f f e f e f e e f 
-        . . . . f f f e e f e f e f f . 
-        . . . f c f f f f e f e f . . . 
-        . . . . f c c c f f e f . . . . 
-        . . . f c c c c f f f . . . . . 
-        . f f c c c c c c f . . . . . . 
-        f c c c c c c f f c f . . . . . 
-        . f c c c c f . f f f . . . . . 
-        . . f c f f . . . . . . . . . . 
-        . . . f . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.ZestyBar),
-    sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . f f f f . . . . . . 
-        . . . . f f b b b b f f . . . . 
-        . . . f b b b b b b b b f . . . 
-        . . f b b b b b b b b b b f . . 
-        . . f b f f f b b f f f b f . . 
-        . f b b b b f b b f b b b c f . 
-        . f b b f f f b b f f f b c f . 
-        . f b b f b b b b b b f b c f . 
-        . f b b f f f b b f f f b c f . 
-        . . f b b b b b b b b b c f . . 
-        . . f b b b b b b b b b c f . . 
-        . . . f c c b b b b c c f . . . 
-        . . . . f f c c c c f f . . . . 
-        . . . . . . f f f f . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Quarter),
-    sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . f f . . . . . . . . f f . . 
-        . . f b f . . . . . . f b f . . 
-        . . . f b f . . . . f b f . . . 
-        . . . . f b f . . f b f . . . . 
-        . . . . . f b f f b f . . . . . 
-        . . . . . . f b b f . . . . . . 
-        . . . . f f f b b f f f . . . . 
-        . . . f a a a f f a a a f . . . 
-        . . f a f f a f f a f f a f . . 
-        . . f a f f a f f a f f a f . . 
-        . . . f a a f . . f a a f . . . 
-        . . . . f f . . . . f f . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Scissors),
-    sprites.create(img`
-        . . . . . f f f f f f . . . . . 
-        . . . . f b b b b b b f . . . . 
-        . . . f b b f f f f b b f . . . 
-        . . . f b f . . . . f b f . . . 
-        . . . f b f . . . . f b f . . . 
-        . . . f b f . . . . f b f . . . 
-        . . . f b f f f f f f b f . . . 
-        . . . f f b b b b b b f f . . . 
-        . . . f b b b b b b b b f . . . 
-        . . . f b b f f f f b b f . . . 
-        . . . f b b f f f f b b f . . . 
-        . . . f b b b f f b b b f . . . 
-        . . . f b b b f f b b b f . . . 
-        . . . f b b b b b b b b f . . . 
-        . . . . f b b b b b b f . . . . 
-        . . . . . f f f f f f . . . . . 
-        `, SpriteKind.Lock),
-    sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . f f f f f . . . 
-        . . . . . . . f b b b b f f . . 
-        . . . . . . . f b f f b f f . . 
-        . . . . . . . f b f f b f f . . 
-        . . . . . . . f b b b b f f . . 
-        . . . . . . . f b f f f f . . . 
-        . . . . . . f b f f b f . . . . 
-        . . . . . f b b f f b f . . . . 
-        . . . . f b b f . f b b f . . . 
-        . . . . f b f . . f b f . . . . 
-        . . . f b b b f . f b f . . . . 
-        . . . f b f f . . f b b f . . . 
-        . . . . f . . . . f b f . . . . 
-        . . . . . . . . . . f . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Keys)
-    ]
 }
 controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     Inv.change_number(ToolbarNumberAttribute.SelectedIndex, 1)
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Baldi, function (sprite, otherSprite) {
-    sprites.destroy(otherSprite)
-    Exits += 1
+    game.gameOver(false)
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`tile10`, function (sprite, location) {
+    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
+    tiles.setTileAt(tiles.getTileLocation(0, 0), assets.tile`transparency16`)
 })
 function Furniture () {
-    for (let value of tiles.getTilesByType(assets.tile`myTile2`)) {
+    for (let value of tiles.getTilesByType(assets.tile`tile9`)) {
         BlueDoor = sprites.create(img`
             f f f f f f f f f f f f f f f f 
             f 8 8 8 8 8 8 8 8 8 8 8 8 8 8 f 
@@ -308,7 +256,7 @@ function Furniture () {
             `, SpriteKind.BlueDoor)
         tiles.placeOnTile(BlueDoor, value)
     }
-    for (let value of tiles.getTilesByType(assets.tile`myTile0`)) {
+    for (let value of tiles.getTilesByType(assets.tile`tile12`)) {
         YellowDoor = sprites.create(img`
             f f f f f f f f f f f f f f f f 
             f 5 5 5 5 5 5 5 5 5 5 5 5 5 5 f 
@@ -329,7 +277,7 @@ function Furniture () {
             `, SpriteKind.YellowDoor)
         tiles.placeOnTile(YellowDoor, value)
     }
-    for (let value of tiles.getTilesByType(assets.tile`myTile6`)) {
+    for (let value of tiles.getTilesByType(assets.tile`tile13`)) {
         BrownDoor = sprites.create(img`
             f f f f f f f f f f f f f f f f 
             f e e e e e e e e e e e e e e f 
@@ -351,7 +299,7 @@ function Furniture () {
         tiles.placeOnTile(BrownDoor, value)
     }
     timer.after(300, function () {
-        for (let value2 of tiles.getTilesByType(assets.tile`myTile12`)) {
+        for (let value2 of tiles.getTilesByType(assets.tile`tile7`)) {
             BrownDoor = sprites.create(img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -501,7 +449,7 @@ function Furniture () {
             ]
             tiles.placeOnTile(Notebooks_List[randint(1, 6)], value2)
         }
-        for (let value of tiles.getTilesByType(assets.tile`myTile10`)) {
+        for (let value of tiles.getTilesByType(assets.tile`tile4`)) {
             BrownDoor = sprites.create(img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -522,7 +470,7 @@ function Furniture () {
                 `, SpriteKind.Table)
             tiles.placeOnTile(BrownDoor, value)
         }
-        for (let value of tiles.getTilesByType(assets.tile`myTile11`)) {
+        for (let value of tiles.getTilesByType(assets.tile`tile3`)) {
             BrownDoor = sprites.create(img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . f f f f . . . . . . 
@@ -576,14 +524,14 @@ function Inventory2 () {
         . . . . . f f f f f f . . . . . 
         `),
     Inventory.create_item("Zesty Bar", img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . f f . . . 
         . . . . . . . . . . . f f . . . 
         . . . . . . . . . f f e f f . . 
         . . . . . . . . f f e f e f f . 
-        . . . . . . . f f e f e f e e f 
+        . . . . . . . f f e f e f e e . 
         . . . . f f f e e f e f e f f . 
         . . . f c f f f f e f e f . . . 
+        . . . . f c c c f f e f . . . . 
         . . . . f c c c f f e f . . . . 
         . . . f c c c c f f f . . . . . 
         . f f c c c c c c f . . . . . . 
@@ -708,6 +656,11 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.BrownDoor, function (sprite, oth
     })
 })
 function Variables () {
+    WrongQuestions = false
+    CurrentQuestion = 1
+    Number_1 = 0
+    Number_2 = 0
+    Answer = 0
     Stoplagwithexits = false
     Thinkpad = false
     NotebooksVar = 0
@@ -715,15 +668,28 @@ function Variables () {
 }
 let CurrentItemName: Inventory.Item = null
 let Exit_Sign: Sprite = null
+let BaldisSpeed = 0
+let item: tiles.Location[] = []
+let BaldiEnemy: Sprite = null
+let Baldihasspawned = false
+let Question2 = 0
+let Question = 0
 let Moving = false
 let Stoplagwithexits = false
+let Answer = 0
+let Number_2 = 0
+let Number_1 = 0
+let CurrentQuestion = 0
+let WrongQuestions = false
 let HoldingItemName: TextSprite = null
 let Notebooks_List: Sprite[] = []
 let BrownDoor: Sprite = null
 let YellowDoor: Sprite = null
 let BlueDoor: Sprite = null
 let Exits = 0
-let Item_List: Sprite[] = []
+let Zesty_Bar: Sprite = null
+let BSoda: Sprite = null
+let projectile: Sprite = null
 let Item_List_Inv: Inventory.Item[] = []
 let Inv: Inventory.Toolbar = null
 let CurrentItem: Inventory.Item = null
@@ -858,10 +824,10 @@ scene.setBackgroundImage(img`
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
     `)
-tiles.setCurrentTilemap(tilemap`level1`)
+tiles.setCurrentTilemap(tilemap`level5`)
 Furniture()
 ItemSpawn()
-tiles.placeOnRandomTile(Student, assets.tile`myTile1`)
+tiles.placeOnRandomTile(Student, assets.tile`tile17`)
 game.onUpdate(function () {
     if (Exits == 4) {
         game.gameOver(true)
@@ -871,32 +837,99 @@ game.onUpdate(function () {
     } else {
         NeedRest.setFlag(SpriteFlag.Invisible, true)
     }
-    if (controller.A.isPressed()) {
-        if (Stamina.value != 0) {
-            if (Moving) {
-                Stamina.value += -0.5
-                Render.moveWithController(3, 3, 0)
+    if (!(Thinkpad)) {
+        if (controller.A.isPressed()) {
+            if (Stamina.value > 0) {
+                if (Moving) {
+                    Stamina.value += -0.5
+                    Render.moveWithController(3, 3, 0)
+                }
+            }
+        } else {
+            if (!(Moving)) {
+                if (Stamina.value <= 100) {
+                    Stamina.value += 0.15
+                    Render.moveWithController(2, 3, 0)
+                }
             }
         }
     } else {
-        if (!(Moving)) {
-            Stamina.value += 0.15
-            Render.moveWithController(2, 3, 0)
+        Render.moveWithController(0, 3, 0)
+        Number_1 = randint(0, 10)
+        Number_2 = randint(0, 10)
+        Question = Number_1 + Number_2
+        Question2 = Number_1 - Number_2
+        Answer = game.askForNumber("" + Number_1 + "+" + Number_2 + "=" + "?", 2)
+        if (Answer == Question) {
+            if (CurrentQuestion == 3) {
+                CurrentQuestion = 1
+                Thinkpad = false
+            } else {
+                CurrentQuestion += 1
+            }
+        } else {
+            WrongQuestions = true
+            if (CurrentQuestion == 3) {
+                CurrentQuestion = 1
+                Thinkpad = false
+            } else {
+                CurrentQuestion += 1
+            }
         }
     }
 })
 game.onUpdate(function () {
-    if (controller.down.isPressed() || controller.up.isPressed()) {
-        Moving = true
-        if (controller.A.isPressed()) {
-            if (Stamina.value != 0) {
-                Render.moveWithController(3, 3, 0)
+    if (!(Thinkpad)) {
+        if (controller.down.isPressed() || controller.up.isPressed()) {
+            Moving = true
+            if (controller.A.isPressed()) {
+                if (Stamina.value > 0) {
+                    Render.moveWithController(3, 3, 0)
+                } else {
+                    Render.moveWithController(2, 3, 0)
+                }
+            } else {
+                Render.moveWithController(2, 3, 0)
             }
         } else {
-            Render.moveWithController(2, 3, 0)
+            Moving = false
         }
-    } else {
-        Moving = false
+    }
+    if (WrongQuestions) {
+        WrongQuestions = false
+        Baldihasspawned = true
+        for (let value of tiles.getTilesByType(assets.tile`myTile20`)) {
+            BaldiEnemy = sprites.create(img`
+                .......fff.......
+                ....f.fdddf......
+                ...fbfdfdfdf.....
+                ...fbfdddddf.....
+                ...fbfd222df.....
+                ...fbffdddf......
+                ...fbf.fff.......
+                ...fbff777f......
+                ...fbff777ff.....
+                ...fb7f777f7f....
+                ...fdff777ffdf...
+                ...ff.f777f.ff...
+                ......f888f......
+                ......f8f8f......
+                ......f8f8f......
+                ......f8f8f......
+                ......f8f8f......
+                ......fffff......
+                `, SpriteKind.Baldi)
+            tiles.placeOnTile(BaldiEnemy, value)
+            item = scene.aStar(BaldiEnemy.tilemapLocation(), Student.tilemapLocation())
+            BaldisSpeed = 20
+            scene.followPath(BaldiEnemy, item, 10)
+        }
+    }
+})
+game.onUpdate(function () {
+    if (Baldihasspawned) {
+        item = scene.aStar(BaldiEnemy.tilemapLocation(), Student.tilemapLocation())
+        scene.followPath(BaldiEnemy, item, NotebooksVar - 1 * 10)
     }
 })
 game.onUpdate(function () {
